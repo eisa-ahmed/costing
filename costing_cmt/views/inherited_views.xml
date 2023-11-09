@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_hr_employee_form_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='work_email']" position="after">
+                    <field name="hourly_cost"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_product_tree_view_inherit" model="ir.ui.view">
+            <field name="name">product.product.tree.view.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_template_variant_value_ids']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='lst_price']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='standard_price']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='virtual_available']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='qty_available']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='uom_id']" position="after">
+                    <field name="qty_available"/>
+                    <field name="standard_price"/>
+                </xpath>
+                <xpath expr="//field[@name='categ_id']" position="before">
+                    <field name="costing_product_type"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_product_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.product.form.view.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='detailed_type']" position="before">
+                    <field name="costing_product_type" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='detailed_type']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='product_tooltip']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='lst_price']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='taxes_id']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='product_tag_ids']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='additional_product_tag_ids']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='purchase_method']" position="replace">
+                </xpath>
+            </field>
+        </record>
+
+
+        <!-- Inheriting the product template search view -->
+        <record id="product_template_search_view_inherit" model="ir.ui.view">
+            <field name="name">product.template.search.view.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='filter_to_purchase']" position="after">
+                    <!-- Filters for Fabric Type -->
+                    <separator/>
+                    <filter string="Shell Fabric" name="shell_fabric"
+                            domain="[('costing_product_type', '=', 'shell')]"/>
+                    <filter string="Lining Fabric" name="lining_fabric"
+                            domain="[('costing_product_type', '=', 'lining')]"/>
+                    <filter string="Zipper" name="zipper" domain="[('costing_product_type', '=', 'zipper')]"/>
+                    <filter string="Button" name="button" domain="[('costing_product_type', '=', 'button')]"/>
+                    <filter string="Embellishment" name="embellishment"
+                            domain="[('costing_product_type', '=', 'embellishment')]"/>
+                </xpath>
+                <xpath expr="//filter[@name='type']" position="replace">
+                    <filter string="Product Type" name="group_by_costing_product_type" domain="[]"
+                            context="{'group_by': 'costing_product_type'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mrp_tree_inherit" model="ir.ui.view">
+            <field name="name">mrp.production.tree.view.inherit</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='production_duration_expected']" position="before">
+                    <field name="cmt_cost"/>
+                </xpath>
+                <xpath expr="//field[@name='components_availability']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='activity_ids']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='origin']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="replace">
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mrp_form_inherit" model="ir.ui.view">
+            <field name="name">mrp.production.form.view.inherit</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_plan']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='do_unreserve']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_scrap']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_toggle_is_locked']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//label[@for='lot_producing_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='lot_producing_id']/parent::node()" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='components_availability']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='move_raw_ids']/tree/field[@name='forecast_availability']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='miscellaneous']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='user_id']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='move_raw_ids']/tree/field[@name='product_id']" position="attributes">
+                    <attribute name="string">Material</attribute>
+                </xpath>
+                <xpath expr="//field[@name='move_raw_ids']/tree/field[@name='product_id']" position="attributes">
+                    <attribute name="string">Material</attribute>
+                </xpath>
+                <xpath expr="//page[@name='components']" position="attributes">
+                    <attribute name="string">Materials</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mrp_workorder_tree_inherit" model="ir.ui.view">
+            <field name="name">mrp.workorder.tree.view.inherit</field>
+            <field name="model">mrp.workorder</field>
+            <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="responsible_id" string="Responsible" widget="many2one_avatar_employee"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- BOM Form View Inherit -->
+        <record id="mrp_bom_form_inherit" model="ir.ui.view">
+            <field name="name">mrp.bom.form.view.inherit</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type']" position="before">
+                    <field name="components_cost" string="Material Cost"/>
+                    <field name="cmt_cost"/>
+                </xpath>
+                <xpath expr="//field[@name='product_tmpl_id']" position="attributes">
+                    <attribute name="string">Style</attribute>
+                </xpath>
+                <xpath expr="//field[@name='product_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='type']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='miscellaneous']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='components']" position="attributes">
+                    <attribute name="string">Materials</attribute>
+                </xpath>
+                <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_id']" position="attributes">
+                    <attribute name="string">Materials</attribute>
+                </xpath>
+                <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_uom_id']" position="attributes">
+                    <attribute name="string">Metric</attribute>
+                </xpath>
+                <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="before">
+                    <field name="costing_product_type"/>
+                </xpath>
+                <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_uom_id']" position="after">
+                    <field name="currency_id" invisible="1"/>
+                    <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="subtotal" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Work Order (Operations) Tree View Inherit -->
+        <record id="mrp_routing_workcenter_tree_inherit" model="ir.ui.view">
+            <field name="name">mrp.routing.workcenter.tree.view.inherit</field>
+            <field name="model">mrp.routing.workcenter</field>
+            <field name="inherit_id" ref="mrp.mrp_routing_workcenter_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='workcenter_id']" position="after">
+                    <field name="responsible_id" widget="many2one_avatar_employee"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Work Order (Operations) Form View Inherit -->
+        <record id="mrp_routing_workcenter_form_inherit" model="ir.ui.view">
+            <field name="name">mrp.routing.workcenter.form.view.inherit</field>
+            <field name="model">mrp.routing.workcenter</field>
+            <field name="inherit_id" ref="mrp.mrp_routing_workcenter_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='time_cycle_manual']" position="before">
+                    <field name="responsible_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mrp.mrp_production_action" model="ir.actions.act_window">
+            <field name="name">Operations</field>
+        </record>
+        <record id="mrp.mrp_production_report" model="ir.actions.act_window">
+            <field name="name">Operations</field>
+        </record>
+
+        <!--   Stock Menu Items Invisible  -->
+        <menuitem id="stock.menu_product_variant_config_stock" active="0"/>
+        <menuitem id="stock.product_product_menu" active="0"/>
+        <menuitem id="stock.menu_action_production_lot_form" active="0"/>
+
+        <!--   Manufacturing Module Menu Items Invisible  -->
+        <menuitem id="mrp.menu_mrp_product_form" active="0"/>
+        <menuitem id="mrp.product_variant_mrp" active="0"/>
+        <menuitem id="mrp.menu_mrp_traceability" active="0"/>
+        <menuitem id="mrp.menu_mrp_workorder_todo" active="0"/>
+        <menuitem id="mrp.menu_mrp_unbuild" active="0"/>
+        <menuitem id="mrp.mrp_planning_menu_root" active="0"/>
+        <menuitem id="mrp.menu_mrp_workcenter_productivity_report" active="0"/>
+        <menuitem id="mrp.menu_mrp_work_order_report" active="0"/>
+        <menuitem id="mrp.menu_mrp_production_report" active="0"/>
+        <menuitem id="mrp.menu_mrp_bom" name="Materials" parent="mrp.menu_mrp_root" sequence="30"/>
+        <menuitem id="mrp.menu_mrp_bom_form_action" name="Bills of Materials" parent="mrp.menu_mrp_root" action="mrp.mrp_bom_form_action" sequence="20"/>
+        <menuitem id="mrp.menu_mrp_reporting" active="0"/>
+        <menuitem id="menu_finished_items" name="Reporting" parent="mrp.menu_mrp_root" action="costing_cmt.action_finished_items" sequence="25"/>
+        <menuitem id="mrp.menu_mrp_production_action" name="Operations" parent="mrp.menu_mrp_manufacturing"/>
+        <menuitem id="mrp.menu_mrp_root" name="Costing" sequence="6"/>
+
+    </data>
+</odoo>

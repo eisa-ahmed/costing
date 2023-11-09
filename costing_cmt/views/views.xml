@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_overhead_record_tree" model="ir.ui.view">
+            <field name="name">overhead.record.tree</field>
+            <field name="model">overhead.record</field>
+            <field name="arch" type="xml">
+                <tree sample="1">
+                    <field name="overhead_id"/>
+                    <field name="cost"/>
+                    <field name="month"/>
+                    <field name="year"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_overhead_record_form" model="ir.ui.view">
+            <field name="name">overhead.record.form</field>
+            <field name="model">overhead.record</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="currency_id" invisible="1"/>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="overhead_id"
+                                       options="{'no_edit': True, 'no_open': True}"/>
+                                <field name="cost"/>
+                            </group>
+                            <group>
+                                <field name="month"/>
+                                <field name="year"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_overhead_record_search" model="ir.ui.view">
+            <field name="name">overhead.record.search</field>
+            <field name="model">overhead.record</field>
+            <field name="arch" type="xml">
+                <search>
+                    <filter string="January" name="january" domain="[('month', '=', '01')]"
+                            help="Show records for January"/>
+                    <filter string="February" name="february" domain="[('month', '=', '02')]"
+                            help="Show records for February"/>
+                    <filter string="March" name="march" domain="[('month', '=', '03')]" help="Show records for March"/>
+                    <filter string="April" name="april" domain="[('month', '=', '04')]" help="Show records for April"/>
+                    <filter string="May" name="may" domain="[('month', '=', '05')]" help="Show records for May"/>
+                    <filter string="June" name="june" domain="[('month', '=', '06')]" help="Show records for June"/>
+                    <filter string="July" name="july" domain="[('month', '=', '07')]" help="Show records for July"/>
+                    <filter string="August" name="august" domain="[('month', '=', '08')]"
+                            help="Show records for August"/>
+                    <filter string="September" name="september" domain="[('month', '=', '09')]"
+                            help="Show records for September"/>
+                    <filter string="October" name="october" domain="[('month', '=', '10')]"
+                            help="Show records for October"/>
+                    <filter string="November" name="november" domain="[('month', '=', '11')]"
+                            help="Show records for November"/>
+                    <filter string="December" name="december" domain="[('month', '=', '12')]"
+                            help="Show records for December"/>
+
+                    <!-- Add filters for individual months here -->
+
+                    <group expand="0" string="Group By">
+                        <filter string="Name" name="group_by_name" context="{'group_by':'overhead_id'}"/>
+                        <filter string="Year" name="group_by_year" context="{'group_by':'year'}"/>
+                        <filter string="Month" name="group_by_month" context="{'group_by':'month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_finished_item_tree">
+            <field name="name">mrp.production.finished.item.tree</field>
+            <field name="model">mrp.production</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="state" invisible="1"/>
+                    <field name="name" string="Reference Operation" optional="hide"/>
+                    <field name="date_planned_start" widget="date" optional="hide"/>
+                    <field name="product_id" string="Item" decoration-bf="1"/>
+                    <field name="product_qty" string="Quantity"/>
+                    <field name="expected_cmt" string="Expected CMT Cost"/>
+                    <field name="cmt_cost" string="Actual CMT Cost"/>
+                    <field name="total_cost_overheads_incl"/>
+                    <field name="production_duration_expected"/>
+                    <field name="production_real_duration"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Finished Items Costing Reports Action -->
+        <record id="action_finished_items" model="ir.actions.act_window">
+            <field name="name">Finished Items</field>
+            <field name="res_model">mrp.production</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="costing_cmt.view_finished_item_tree"/>
+            <field name="domain">[('state','=', 'done')]</field>
+        </record>
+
+        <!-- Actions -->
+        <record id="action_product_shell" model="ir.actions.act_window">
+            <field name="name">Shell Fabric</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('costing_product_type','=','shell')]</field>
+            <field name="context">{'default_costing_product_type': 'shell'}</field>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="view_id" ref="product.product_product_tree_view"/>
+        </record>
+
+        <record id="action_product_lining" model="ir.actions.act_window">
+            <field name="name">Lining Fabric</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('costing_product_type','=','lining')]</field>
+            <field name="context">{'default_costing_product_type': 'lining'}</field>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="view_id" ref="product.product_product_tree_view"/>
+        </record>
+
+        <record id="action_product_zipper" model="ir.actions.act_window">
+            <field name="name">Zippers</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('costing_product_type','=','zipper')]</field>
+            <field name="context">{'default_costing_product_type': 'zipper'}</field>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="view_id" ref="product.product_product_tree_view"/>
+        </record>
+
+        <record id="action_product_button" model="ir.actions.act_window">
+            <field name="name">Buttons</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('costing_product_type','=','button')]</field>
+            <field name="context">{'default_costing_product_type': 'button'}</field>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="view_id" ref="product.product_product_tree_view"/>
+        </record>
+
+        <record id="action_product_embellishment" model="ir.actions.act_window">
+            <field name="name">Embellishments</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('costing_product_type','=','embellishment')]</field>
+            <field name="context">{'default_costing_product_type': 'embellishment'}</field>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="view_id" ref="product.product_product_tree_view"/>
+        </record>
+
+        <record id="action_product_product" model="ir.actions.act_window">
+            <field name="name">Styles</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('costing_product_type', '=', False)]</field>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="view_id" ref="product.product_product_tree_view"/>
+        </record>
+
+        <record id="action_overhead_record" model="ir.actions.act_window">
+            <field name="name">Overheads</field>
+            <field name="res_model">overhead.record</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{
+                'search_default_group_by_month': 1,
+                'search_default_group_by_year': 1
+                }
+            </field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create Overhead Records
+                </p>
+            </field>
+        </record>
+
+
+        <!-- Menu Items -->
+        <menuitem id="menu_overhead_record" name="Overheads" parent="mrp.menu_mrp_configuration"
+                  action="action_overhead_record" sequence="100"/>
+        <menuitem id="menu_product_templates_stock" name="Templates" parent="stock.menu_stock_inventory_control"
+                  action="action_product_product" sequence="1"/>
+        <menuitem id="menu_product_zipper_stock" name="Zippers" parent="stock.menu_stock_inventory_control"
+                  action="action_product_zipper" sequence="2"/>
+        <menuitem id="menu_product_button_stock" name="Buttons" parent="stock.menu_stock_inventory_control"
+                  action="action_product_button" sequence="3"/>
+        <menuitem id="menu_product_embellishment_stock" name="Embellishments"
+                  parent="stock.menu_stock_inventory_control" action="action_product_embellishment" sequence="4"/>
+        <menuitem id="menu_product_shell_stock" name="Shell Fabric" parent="stock.menu_stock_inventory_control"
+                  action="action_product_shell" sequence="5"/>
+        <menuitem id="menu_product_lining_stock" name="Lining Fabric" parent="stock.menu_stock_inventory_control"
+                  action="action_product_lining" sequence="6"/>
+
+        <menuitem id="menu_product_templates_mrp" name="Styles" parent="mrp.menu_mrp_root"
+                  action="action_product_product" sequence="10"/>
+        <menuitem id="menu_product_zipper_mrp" name="Zippers" parent="mrp.menu_mrp_bom"
+                  action="action_product_zipper" sequence="2"/>
+        <menuitem id="menu_product_button_mrp" name="Buttons" parent="mrp.menu_mrp_bom"
+                  action="action_product_button" sequence="3"/>
+        <menuitem id="menu_product_shell_mrp" name="Shell Fabric" parent="mrp.menu_mrp_bom"
+                  action="action_product_shell" sequence="4"/>
+        <menuitem id="menu_product_lining_mrp" name="Lining Fabric" parent="mrp.menu_mrp_bom"
+                  action="action_product_lining" sequence="5"/>
+        <menuitem id="menu_product_embellishment_mrp" name="Embellishments"
+                  parent="mrp.menu_mrp_bom" action="action_product_embellishment" sequence="6"/>
+
+    </data>
+</odoo>
